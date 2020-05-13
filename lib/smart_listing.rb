@@ -207,13 +207,18 @@ module SmartListing
       if @options[:sort_attributes] == :implicit
         return sort if sort_params.blank?
 
-        sort_params.map do |attr, dir|
-          key = attr.to_s if @options[:array] || @collection.klass.attribute_method?(attr)
-          if key && ALLOWED_DIRECTIONS[dir.to_s]
-            sort ||= {}
-            sort[key] = dir.to_s
-          end
-        end
+        # returned back from previous version (1.2.2). Otherwise save sorting into cookies does not work
+        return sort_params.dup if sort_params.present?
+
+        # Added by Sology/smart_listing master branch
+        # sort_params.map do |attr, dir|
+        #   key = attr.to_s if @options[:array] || @collection.klass.attribute_method?(attr)
+        #   if key && ALLOWED_DIRECTIONS[dir.to_s]
+        #     sort ||= {}
+        #     sort[key] = dir.to_s
+        #   end
+        # end
+
       elsif @options[:sort_attributes]
         @options[:sort_attributes].each do |a|
           k, v = a
